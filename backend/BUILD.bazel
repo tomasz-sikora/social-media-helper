@@ -1,0 +1,35 @@
+"""Bazel BUILD for the Python backend."""
+
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+py_library(
+    name = "mcp_server_lib",
+    srcs = glob(["mcp_server/**/*.py"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "@pip//fastapi",
+        "@pip//uvicorn",
+        "@pip//httpx",
+        "@pip//feedparser",
+        "@pip//openai",
+        "@pip//mcp",
+        "@pip//pydantic",
+        "@pip//pydantic_settings",
+        "@pip//python_dotenv",
+        "@pip//scikit_learn",
+    ],
+)
+
+py_binary(
+    name = "server",
+    srcs = ["mcp_server/main.py"],
+    main = "mcp_server/main.py",
+    deps = [":mcp_server_lib"],
+)
+
+py_test(
+    name = "backend_tests",
+    srcs = glob(["tests/**/*.py"]),
+    deps = [":mcp_server_lib"],
+    size = "small",
+)

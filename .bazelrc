@@ -1,0 +1,4 @@
+# Bazel flags applied to every command
+build --incompatible_enable_cc_toolchain_resolution=false
+build --java_runtime_version=remotejdk_17
+test  --test_output=errors

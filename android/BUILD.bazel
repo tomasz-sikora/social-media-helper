@@ -1,0 +1,16 @@
+"""Bazel BUILD for Android app.
+
+The primary build tool for Android is Gradle (via Gradle wrapper).
+This BUILD file provides a shell target that delegates to Gradle,
+allowing `bazel run //android:build_apk` to produce the debug APK.
+"""
+
+sh_binary(
+    name = "build_apk",
+    srcs = ["scripts/gradle_build.sh"],
+    data = glob(["**/*"], exclude = [
+        "**/*.class",
+        "**/build/**",
+        "**/.gradle/**",
+    ]),
+)

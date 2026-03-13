@@ -1,0 +1,24 @@
+"""
+Root Bazel MODULE for social-media-helper monorepo.
+"""
+
+module(
+    name = "social_media_helper",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_python", version = "0.36.0")
+bazel_dep(name = "rules_android", version = "0.6.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.12",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pip",
+    python_version = "3.12",
+    requirements_lock = "//backend:requirements.txt",
+)
+use_repo(pip, "pip")

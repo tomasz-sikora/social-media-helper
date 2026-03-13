@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: social-media-helper-backend:latest
+    ports:
+      - "8000:8000"
+    environment:
+      # Copy .env.example to .env and fill in your values
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - HACKERNEWS_TOP_N=${HACKERNEWS_TOP_N:-30}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - CACHE_TTL_SECONDS=${CACHE_TTL_SECONDS:-900}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
