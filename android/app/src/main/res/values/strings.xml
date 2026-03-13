@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Social Media Helper</string>
+    <string name="digest_title">Today\'s Digest</string>
+    <string name="empty_feed">No stories yet.\nPull to refresh.</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_digest">Daily Digest</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.SocialMediaHelper" parent="Theme.Material3.DayNight.DarkActionBar">
+        <!-- Customize colours here -->
+    </style>
+
+    <style name="Theme.SocialMediaHelper" parent="Base.Theme.SocialMediaHelper" />
+
+    <style name="Theme.SocialMediaHelper.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
