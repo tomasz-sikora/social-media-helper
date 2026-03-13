@@ -74,11 +74,18 @@ social-media-helper/
 - CI workflow (lint + pytest)
 - Manual release workflow (APK artifact)
 
-### Stage 2 – Social Platform Integration
-- X (Twitter) via Nitter RSS or RSSHub
-- Facebook public pages via RSSHub
-- LinkedIn public profiles via RSSHub
-- Per-user priority scoring (friends / local community tags)
+### Stage 2 – Social Platform Integration ✅
+- X (Twitter) via Nitter RSS (primary) or RSSHub (fallback) – `TwitterNitterReader`
+- Facebook public pages via RSSHub – `FacebookRSSHubReader`
+- LinkedIn public companies via RSSHub – `LinkedInRSSHubReader`
+- Per-user priority scoring (friends / local community tags) – `apply_priority_scores`
+
+> **Note – RSSHub vs custom crawler:**  RSSHub and Nitter cover *public* content
+> without authentication and are the pragmatic choice for Stage 2.  For access to
+> private/non-public posts (e.g. friends-only Facebook posts, private Twitter feeds)
+> a headless-browser crawler or Android-emulator approach would be required.  That
+> path carries significant maintenance burden (anti-bot measures, ToS risks) and is
+> therefore deferred to a future stage when the value is clear.
 
 ### Stage 3 – Enhanced Intelligence
 - Sentence-transformer based semantic deduplication (cluster-level)
@@ -99,3 +106,4 @@ social-media-helper/
 |------|--------|
 | 2026-03-13 | Repository created, initial plan committed |
 | 2026-03-13 | Stage 1 implementation: backend (MCP+REST), Android app, Bazel, CI/CD |
+| 2026-03-13 | Stage 2 implementation: Twitter/Nitter, Facebook/RSSHub, LinkedIn/RSSHub, priority scoring |

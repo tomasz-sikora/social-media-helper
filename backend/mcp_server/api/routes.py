@@ -20,8 +20,10 @@ from mcp_server.config import settings
 from mcp_server.feeds.hackernews import HackerNewsFeedReader
 from mcp_server.feeds.onet import get_onet_readers
 from mcp_server.feeds.rss_reader import RssFeedReader
+from mcp_server.feeds.social import get_social_readers
 from mcp_server.processing.categorizer import categorise_items
 from mcp_server.processing.deduplicator import deduplicate
+from mcp_server.processing.scorer import apply_priority_scores
 from mcp_server.processing.summarizer import generate_daily_digest, summarise_items
 
 logger = logging.getLogger(__name__)
@@ -53,6 +55,13 @@ async def _fetch_all_items():
         HackerNewsFeedReader(top_n=settings.hackernews_top_n),
         *get_onet_readers(),
         *[RssFeedReader(url) for url in settings.rss_feeds],
+        *get_social_readers(
+            twitter_accounts=settings.twitter_accounts,
+            facebook_pages=settings.facebook_pages,
+            linkedin_companies=settings.linkedin_companies,
+            nitter_base_url=settings.nitter_base_url,
+            rsshub_base_url=settings.rsshub_base_url,
+        ),
     ]
     results = await asyncio.gather(*[r.fetch() for r in readers], return_exceptions=True)
     items = []
@@ -72,10 +81,17 @@ async def _get_processed_feed():
     raw = await _fetch_all_items()
     categorised = categorise_items(raw)
     deduped = deduplicate(categorised, threshold=settings.dedup_similarity_threshold)
+    # Apply per-user priority scoring before sorting
+    scored = apply_priority_scores(
+        deduped,
+        priority_authors=settings.priority_authors,
+        priority_tags=settings.priority_tags,
+        boost=settings.priority_boost,
+    )
     # Sort by score desc, then by date desc
-    deduped.sort(key=lambda x: (x.score, x.published_at), reverse=True)
+    scored.sort(key=lambda x: (x.score, x.published_at), reverse=True)
     summarised = await summarise_items(
-        deduped[: settings.summary_max_items],
+        scored[: settings.summary_max_items],
         openai_api_key=settings.openai_api_key,
         openai_model=settings.openai_model,
         openai_base_url=settings.openai_base_url,
