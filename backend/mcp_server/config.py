@@ -17,8 +17,26 @@ class Settings(BaseSettings):
         "https://wiadomosci.onet.pl/rss.xml",
         "https://feeds.feedburner.com/wiadomosci-onet",
     ]
-    # Optional RSSHub instance for social platforms
+
+    # Social platform integration (Stage 2)
+    # Nitter instance for Twitter/X RSS (e.g. https://nitter.net)
+    nitter_base_url: str = ""
+    # RSSHub instance for Facebook, LinkedIn, and Twitter fallback
     rsshub_base_url: str = ""
+    # Comma-separated Twitter/X usernames to follow (no @ prefix required)
+    twitter_accounts: list[str] = []
+    # Comma-separated Facebook page names to follow
+    facebook_pages: list[str] = []
+    # Comma-separated LinkedIn company slugs to follow
+    linkedin_companies: list[str] = []
+
+    # Per-user priority scoring
+    # Authors (names or @handles) whose items receive a score boost
+    priority_authors: list[str] = []
+    # Tags whose matching items receive a score boost
+    priority_tags: list[str] = []
+    # Score bonus added per matching priority criterion
+    priority_boost: int = 100
 
     # Processing
     dedup_similarity_threshold: float = 0.85
